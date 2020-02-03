@@ -100,5 +100,9 @@ public class TicketServiceImpl implements TicketService {
 		updateFlightSchedule.setAvailableSeats(availableSeatsUpdate);
 		flightScheduleRepository.save(updateFlightSchedule);
 
+		//Update ticket booking status as "Canceled"
+		Ticket statusUpdate = ticketDetail.get();
+		statusUpdate.setStatus(Constant.TICKET_BOOKING_CANCELLED);
+		ticketRepository.save(statusUpdate);
 	}
 }

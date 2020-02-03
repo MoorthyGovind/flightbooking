@@ -15,6 +15,7 @@ public class Constant {
 
 
 	//Tickets
+	public static final String TICKET_BOOKING_CANCELLED = "Cancelled";
 	public static final String TICKET_CANCELLED_SUCCESSFULLY = "Ticket Cancelled Successfully";
 	public static final String TICKET_CANCELLED_BEFORE_RANGE = "Cannot cancel ticket, 1 day before you cancel from travel date";
 
