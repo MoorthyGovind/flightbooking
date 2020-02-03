@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,14 +23,15 @@ public class Ticket {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticketId")
-	private Integer ticketId;
+	private Long ticketId;
+	@CreationTimestamp
 	private LocalDate bookingDate;
 	@ManyToOne
 	@JoinColumn(name = "flight_schedule_id")
 	private FlightSchedule flightScheduleId;
 	private String emailId;
 	private Long phoneNumber;
-	private String paymentType;
+	private Integer paymentType;
 	private Double totalFare;
 	private String status;
 
