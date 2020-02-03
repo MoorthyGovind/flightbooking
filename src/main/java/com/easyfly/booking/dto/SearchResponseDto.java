@@ -1,5 +1,7 @@
 package com.easyfly.booking.dto;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class SearchResponseDto {
 
-	private String statusCode;
+	private Integer statusCode;
 	private String message;
+	private List<FlightDto> flightList;
 }
