@@ -19,13 +19,13 @@ public class BookingEnum {
 	public enum TravelType {
 		ECONOMY(1), BUSINESS(2);
 
-		private Integer travelType;
+		private int travelType;
 
-		TravelType(Integer travelType) {
+		TravelType(int travelType) {
 			this.travelType = travelType;
 		}
 
-		public Integer getTravelType() {
+		public int getTravelType() {
 			return travelType;
 		}
 
@@ -38,16 +38,9 @@ public class BookingEnum {
 	 * @since 03-02-2020
 	 */
 	public enum PaymentType {
-		/*
-		 * PAYTM(1), PHONEPE(2);
-		 * 
-		 * private Integer paymentType;
-		 * 
-		 * PaymentType(Integer paymentType) { this.paymentType = paymentType; }
-		 * 
-		 * public Integer getPaymentType() { return paymentType; }
-		 * 
-		 */
-		PAYTM,PHONEPE;
+		
+		PAYTM, PHONEPE;
 	}
+	
+	
 }
