@@ -40,5 +40,4 @@ public class Ticket {
 	private Double totalFare;
 	private String status;
 
-
 }
