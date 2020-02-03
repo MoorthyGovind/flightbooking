@@ -15,13 +15,13 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@SequenceGenerator(name = "bookingId", initialValue = 5000, allocationSize = 1)
+@SequenceGenerator(name = "ticketId", initialValue = 5000, allocationSize = 1)
 @Entity
-public class FlightBooking {
+public class Ticket {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingId")
-	private Integer bookingId;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ticketId")
+	private Integer ticketId;
 	private LocalDate bookingDate;
 	@ManyToOne
 	@JoinColumn(name = "flight_schedule_id")
@@ -30,5 +30,6 @@ public class FlightBooking {
 	private Long phoneNumber;
 	private String paymentType;
 	private Double totalFare;
+	private String status;
 
 }

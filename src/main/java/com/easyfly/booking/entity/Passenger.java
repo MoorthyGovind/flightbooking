@@ -1,5 +1,6 @@
 package com.easyfly.booking.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,13 +14,15 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-public class FlightBookingPassenger {
+public class Passenger {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer passengerId;
 	@ManyToOne
-	@JoinColumn(name = "booking_id")
-	private FlightBooking bookingId;
+	@JoinColumn(name = "ticket_id")
+	private Ticket ticketId;
 	private String name;
 	private Integer age;
+	@Column(unique = true)
+	private Long aadharNumber;
 }
