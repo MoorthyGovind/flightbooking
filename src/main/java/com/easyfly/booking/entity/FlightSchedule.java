@@ -1,5 +1,6 @@
 package com.easyfly.booking.entity;
 
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -30,5 +31,4 @@ public class FlightSchedule {
 	private Integer availableSeats;
 	private Double fare;
 	private Integer travelTypeId;
-
 }
