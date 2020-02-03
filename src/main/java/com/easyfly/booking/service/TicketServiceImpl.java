@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.naming.NamingException;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,34 +15,95 @@ import org.springframework.stereotype.Service;
 import com.easyfly.booking.constant.Constant;
 import com.easyfly.booking.dto.PassengerDto;
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
+import com.easyfly.booking.dto.TicketRequestDto;
+import com.easyfly.booking.dto.TicketResponsedto;
 import com.easyfly.booking.entity.FlightSchedule;
 import com.easyfly.booking.entity.Passenger;
 import com.easyfly.booking.entity.Ticket;
 import com.easyfly.booking.exception.CancelTicketBeforeRangeException;
+import com.easyfly.booking.exception.FlightNotFoundException;
 import com.easyfly.booking.exception.PassengerNotFoundException;
 import com.easyfly.booking.exception.TicketNotFoundException;
 import com.easyfly.booking.repository.FlightScheduleRepository;
 import com.easyfly.booking.repository.PassengerRepository;
 import com.easyfly.booking.repository.TicketRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * This class is used to perform the flight ticket related operation like
+ * booking,cancellation
+ * 
+ * @author Chethana
+ *
+ */
 @Service
+@Slf4j
 @Transactional
 public class TicketServiceImpl implements TicketService {
-
 	@Autowired
 	TicketRepository ticketRepository;
-
+	
 	@Autowired
 	PassengerRepository passengerRepository;
 	
-	/**
-	 * The Constant log.
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
-
 	@Autowired
 	FlightScheduleRepository flightScheduleRepository;
 
+	
+	/**
+	 * This method is used to reserveTicket for one journey flight ticket
+	 * 
+	 * @author Chethana M
+	 * @param ticketRequestDto - Takes parameters which are required to reserve ticket
+	 * @throws FlightNotFoundException - Thrown when flight is not found
+	 * @throws NamingException - Thrown when Payment Exception occurs
+	 * @return TicketResponsedto - Returns Booking details
+	 * 
+	 */
+	public TicketResponsedto reserveTicket(TicketRequestDto ticketRequestDto) throws FlightNotFoundException, NamingException{
+		log.info("Entering into reserveTicket of TicketServiceImpl");
+		
+		Optional<FlightSchedule> flightSchedule= flightScheduleRepository.findById(ticketRequestDto.getFlightScheduleId());
+		if(!flightSchedule.isPresent()) {
+			log.error("Exception Occured in reserveTicket of TicketServiceImpl:"+Constant.FLIGHT_NOT_FOUND);
+			throw new FlightNotFoundException(Constant.FLIGHT_NOT_FOUND);
+		}
+		if(flightSchedule.get().getAvailableSeats()<ticketRequestDto.getNoOfPassengers()) {
+			log.error("Exception Occured in reserveTicket of TicketServiceImpl:"+Constant.INSUFFICIENT_TICKETS);
+			throw new FlightNotFoundException(Constant.INSUFFICIENT_TICKETS);
+		}
+		Ticket ticket= new Ticket();
+		flightSchedule.get().setAvailableSeats(flightSchedule.get().getAvailableSeats()-ticketRequestDto.getNoOfPassengers());
+		BeanUtils.copyProperties(ticketRequestDto, ticket);
+		ticket.setStatus(Constant.STATUS_BOOKED);
+		ticket.setTotalFare(ticketRequestDto.getTotalFare());
+		ticket.setFlightScheduleId(flightSchedule.get());
+		ticket.setPaymentType(ticketRequestDto.getPaymentType());
+		ticket.setBookingDate(LocalDate.now());
+		ticket=ticketRepository.save(ticket);
+		PaymentService paymentService = ServiceLocator.getService(ticketRequestDto.getPaymentType().toString());
+		paymentService.execute();
+		final Ticket ticketDetails=ticket;
+
+		
+		List<PassengerDto> passengerList=ticketRequestDto.getPassagerList();
+		passengerList.forEach(passengerIndex->{
+			Passenger passenger= new Passenger();
+			BeanUtils.copyProperties(passengerIndex, passenger);
+			passenger.setTicketId(ticketDetails);
+			passengerRepository.save(passenger);
+		}
+		);
+	
+		log.debug("Entering into reserveTicket of TicketServiceImpl:Ticket booked successfully");
+		TicketResponsedto ticketResponsedto= new TicketResponsedto();
+		BeanUtils.copyProperties(ticket, ticketResponsedto);
+		ticketResponsedto.setBookingDate(ticket.getBookingDate());
+		
+		return  ticketResponsedto;
+	}
+	
 	/**
 	 * @author PriyaDharshini S.
 	 * @since 2020-02-03. This method will get particular ticket details by passing
@@ -61,15 +121,15 @@ public class TicketServiceImpl implements TicketService {
 			throws TicketNotFoundException, PassengerNotFoundException {
 		Optional<Ticket> ticket = ticketRepository.findById(ticketId);
 		if (!ticket.isPresent()) {
-			logger.error("Entering into TicketServiceImpl:"+Constant.TICKET_NOT_FOUND);
+			log.error("Entering into TicketServiceImpl:"+Constant.TICKET_NOT_FOUND);
 			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
 		} else {
 			List<Passenger> passengers = passengerRepository.findAllByTicketId(ticket.get());
 			if (passengers.isEmpty()) {
-				logger.error("Entering into TicketServiceImpl:"+Constant.PASSENGER_NOT_FOUND);
+				log.error("Entering into TicketServiceImpl:"+Constant.PASSENGER_NOT_FOUND);
 				throw new PassengerNotFoundException(Constant.PASSENGER_NOT_FOUND);
 			} else {
-				logger.info("Entering into TicketServiceImpl:getting ticket details");
+				log.info("Entering into TicketServiceImpl:getting ticket details");
 				TicketDetailsResponseDto ticketDetailsResponseDto = new TicketDetailsResponseDto();
 				BeanUtils.copyProperties(ticket.get(), ticketDetailsResponseDto);
 				ticketDetailsResponseDto.setFlightName(ticket.get().getFlightScheduleId().getFlightId().getFlightName());

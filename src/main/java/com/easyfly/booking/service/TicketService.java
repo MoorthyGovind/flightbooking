@@ -1,7 +1,12 @@
 package com.easyfly.booking.service;
 
+import javax.naming.NamingException;
+
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
+import com.easyfly.booking.dto.TicketRequestDto;
+import com.easyfly.booking.dto.TicketResponsedto;
 import com.easyfly.booking.exception.CancelTicketBeforeRangeException;
+import com.easyfly.booking.exception.FlightNotFoundException;
 import com.easyfly.booking.exception.PassengerNotFoundException;
 import com.easyfly.booking.exception.TicketNotFoundException;
 
@@ -23,4 +28,5 @@ public interface TicketService {
 
 	public void cancleBooking(Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException;
+	public TicketResponsedto reserveTicket(TicketRequestDto ticketRequestDto) throws FlightNotFoundException, NamingException;
 }
