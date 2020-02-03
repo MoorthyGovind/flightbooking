@@ -38,17 +38,16 @@ public class BookingEnum {
 	 * @since 03-02-2020
 	 */
 	public enum PaymentType {
-		PAYTM(1), PHONEPE(2);
-
-		private Integer paymentType;
-
-		PaymentType(Integer paymentType) {
-			this.paymentType = paymentType;
-		}
-
-		public Integer getPaymentType() {
-			return paymentType;
-		}
-
+		/*
+		 * PAYTM(1), PHONEPE(2);
+		 * 
+		 * private Integer paymentType;
+		 * 
+		 * PaymentType(Integer paymentType) { this.paymentType = paymentType; }
+		 * 
+		 * public Integer getPaymentType() { return paymentType; }
+		 * 
+		 */
+		PAYTM,PHONEPE;
 	}
 }

@@ -10,4 +10,5 @@ public class Constant {
 	public static final String FAILURE_MESSAGE = "Failure";
 	public static final String SUCCESS_MESSAGE = "Success";
 	public static final String STATUS_BOOKED = "BOOKED";
+	public static final String INSUFFICIENT_TICKETS = "Insufficient tickets available";
 }

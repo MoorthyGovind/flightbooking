@@ -3,6 +3,8 @@ package com.easyfly.booking.entity;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.easyfly.booking.common.BookingEnum.PaymentType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +35,8 @@ public class Ticket {
 	private FlightSchedule flightScheduleId;
 	private String emailId;
 	private Long phoneNumber;
-	private Integer paymentType;
+	@Enumerated(EnumType.STRING)
+	private PaymentType paymentType;
 	private Double totalFare;
 	private String status;
 
