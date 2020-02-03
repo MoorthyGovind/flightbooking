@@ -24,6 +24,7 @@ public class TicketDetailsResponseDto {
 	private String destination;
 	private LocalTime departureTime;
 	private LocalTime arrivalTime;
+	private String flightName;
 	private List<PassengerDto> passengers;
 
 }
