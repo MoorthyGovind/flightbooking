@@ -1,6 +1,7 @@
 package com.easyfly.booking.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,8 @@ public class FlightDto {
 	private String source;
 	private String destination;
 	private Double fare;
+	private LocalTime arrivalTime;
+	private LocalTime departureTime;
+	
 
 }

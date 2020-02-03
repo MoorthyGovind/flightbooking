@@ -1,6 +1,7 @@
 package com.easyfly.booking.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,9 @@ public class FlightSchedule {
 	@ManyToOne
 	@JoinColumn(name = "flight_id")
 	private Flight flightId; 
-	private LocalDateTime flightScheduledDate;
+	private LocalDate flightScheduledDate;
+	private LocalTime departureTime;
+	private LocalTime arrivalTime;
 	private Integer availableSeats;
 	private Double fare;
 	private Integer travelTypeId;
