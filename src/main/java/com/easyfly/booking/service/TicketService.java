@@ -1,11 +1,12 @@
 package com.easyfly.booking.service;
 
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
+import com.easyfly.booking.exception.CancelTicketBeforeRangeException;
 import com.easyfly.booking.exception.PassengerNotFoundException;
 import com.easyfly.booking.exception.TicketNotFoundException;
 
 public interface TicketService {
-	
+
 	/**
 	 * @author PriyaDharshini S.
 	 * @since 2020-02-03. This method will get particular ticket details by passing
@@ -20,4 +21,6 @@ public interface TicketService {
 	 */
 	TicketDetailsResponseDto getTicketDetails(Long ticketId) throws TicketNotFoundException, PassengerNotFoundException;
 
+	public void cancleBooking(Long ticketId)
+			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException;
 }

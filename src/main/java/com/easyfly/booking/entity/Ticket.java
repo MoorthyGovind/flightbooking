@@ -1,7 +1,6 @@
 package com.easyfly.booking.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

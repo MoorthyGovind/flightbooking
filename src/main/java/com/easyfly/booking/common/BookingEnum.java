@@ -1,7 +1,5 @@
 package com.easyfly.booking.common;
 
-import java.util.EnumSet;
-
 /**
  * BookingEnum is the enum for the maintaining the values of the Travel type and
  * Payment mode types.
