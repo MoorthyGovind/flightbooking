@@ -1,5 +1,7 @@
 package com.easyfly.booking.common;
 
+import java.util.EnumSet;
+
 /**
  * BookingEnum is the enum for the maintaining the values of the Travel type and
  * Payment mode types.
@@ -19,13 +21,13 @@ public class BookingEnum {
 	public enum TravelType {
 		ECONOMY(1), BUSINESS(2);
 
-		private Integer travelType;
+		private int travelType;
 
-		TravelType(Integer travelType) {
+		TravelType(int travelType) {
 			this.travelType = travelType;
 		}
 
-		public Integer getTravelType() {
+		public int getTravelType() {
 			return travelType;
 		}
 
@@ -50,5 +52,9 @@ public class BookingEnum {
 			return paymentType;
 		}
 
+	}
+	
+	public static boolean checkTravelTypeValue(String value){
+		   return EnumSet.allOf(BookingEnum.TravelType.class).contains(value);
 	}
 }
