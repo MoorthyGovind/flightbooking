@@ -1,5 +1,7 @@
 package com.easyfly.booking.controller;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class TicketController {
 	 * 
 	 */
 	@GetMapping("/{ticketId}")
-	public ResponseEntity<TicketDetailsResponseDto> getTicketDetails(@PathVariable Long ticketId)
+	public ResponseEntity<TicketDetailsResponseDto> getTicketDetails(@Valid@PathVariable Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException {
 		logger.info("Entering into TicketController: getting ticket details");
 		return new ResponseEntity<>(ticketService.getTicketDetails(ticketId), HttpStatus.OK);
