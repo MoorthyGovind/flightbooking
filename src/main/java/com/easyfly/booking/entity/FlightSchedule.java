@@ -1,6 +1,7 @@
 package com.easyfly.booking.entity;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,5 +28,7 @@ public class FlightSchedule {
 	private Integer availableSeats;
 	private Double fare;
 	private Integer travelTypeId;
+	private LocalTime departureTime;
+	private LocalTime arrivalTime;
 
 }

@@ -39,15 +39,20 @@ public class TicketServiceImpl implements TicketService {
 				throw new PassengerNotFoundException(Constant.PASSENGER_NOT_FOUND);
 			} else {
 				TicketDetailsResponseDto ticketDetailsResponseDto = new TicketDetailsResponseDto();
-				BeanUtils.copyProperties(ticket, ticketDetailsResponseDto);
+				BeanUtils.copyProperties(ticket.get(), ticketDetailsResponseDto);
+				ticketDetailsResponseDto.setArrivalTime(ticket.get().getFlightScheduleId().getArrivalTime());
+				ticketDetailsResponseDto.setDepartureTime(ticket.get().getFlightScheduleId().getDepartureTime());
 				ticketDetailsResponseDto
 						.setSource(ticket.get().getFlightScheduleId().getFlightId().getSourceId().getLocationName());
 				ticketDetailsResponseDto.setDestination(
 						ticket.get().getFlightScheduleId().getFlightId().getDestinationId().getLocationName());
 				List<PassengerDto> passengerList = new ArrayList<>();
-				passengerList.forEach(passengerDetails -> {
-					BeanUtils.copyProperties(passengers, passengerList);
+				passengers.forEach(passengerDetails -> {
+					PassengerDto passengerDto = new PassengerDto();
+					BeanUtils.copyProperties(passengerDetails, passengerDto);
+					passengerList.add(passengerDto);
 				});
+				ticketDetailsResponseDto.setPassengers(passengerList);
 				return ticketDetailsResponseDto;
 
 			}
