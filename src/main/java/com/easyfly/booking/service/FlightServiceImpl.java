@@ -1,7 +1,6 @@
 package com.easyfly.booking.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,10 +73,13 @@ public class FlightServiceImpl implements FlightService {
 		List<Flight> flights = flightRepository.findBySourceIdLocationIdAndDestinationIdLocationId(
 				sourceLocation.get().getLocationId(), destinationLocation.get().getLocationId());
 		flights.forEach(flight -> {
+			// find the flight schedule details based on the flight.
 			Optional<FlightSchedule> flightSchedule = flightScheduleRepository
-					.findByFlightIdAndTravelTypeIdAndFlightScheduledDate(flight, travelType.getTravelType(),
-							scheduleDate);
+					.findByFlightIdAndTravelTypeIdAndFlightScheduledDateAndAvailableSeatsGreaterThanEqual(flight,
+							travelType.getTravelType(), scheduleDate, searchDto.getNoOfPassengers());
 			if (flightSchedule.isPresent()) {
+				// Converting the flight and schedules to flight dto model.
+
 				flightDtos.add(FlightConverter.convertDto(flight, flightSchedule.get()));
 			}
 		});

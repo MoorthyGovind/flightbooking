@@ -12,6 +12,6 @@ import com.easyfly.booking.entity.FlightSchedule;
 @Repository
 public interface FlightScheduleRepository extends JpaRepository<FlightSchedule, Integer> {
 
-	Optional<FlightSchedule> findByFlightIdAndTravelTypeIdAndFlightScheduledDate(Flight flight, Integer travelTypeId,
-			LocalDate scheduleDate);
+	Optional<FlightSchedule> findByFlightIdAndTravelTypeIdAndFlightScheduledDateAndAvailableSeatsGreaterThanEqual(Flight flight,
+			Integer travelTypeId, LocalDate scheduleDate, Integer noOfPassengers);
 }

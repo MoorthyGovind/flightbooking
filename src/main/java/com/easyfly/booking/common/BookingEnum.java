@@ -53,8 +53,4 @@ public class BookingEnum {
 		}
 
 	}
-	
-	public static boolean checkTravelTypeValue(String value){
-		   return EnumSet.allOf(BookingEnum.TravelType.class).contains(value);
-	}
 }
