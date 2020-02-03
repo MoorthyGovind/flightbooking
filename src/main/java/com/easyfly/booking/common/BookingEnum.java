@@ -38,6 +38,7 @@ public class BookingEnum {
 	 * @since 03-02-2020
 	 */
 	public enum PaymentType {
+		
 		PAYTM, PHONEPE;
 	}
 

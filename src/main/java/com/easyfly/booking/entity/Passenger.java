@@ -1,6 +1,5 @@
 package com.easyfly.booking.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +22,5 @@ public class Passenger {
 	private Ticket ticketId;
 	private String name;
 	private Integer age;
-	@Column(unique = true)
 	private Long aadharNumber;
 }
