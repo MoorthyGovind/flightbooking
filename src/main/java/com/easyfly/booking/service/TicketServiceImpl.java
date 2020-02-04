@@ -43,67 +43,69 @@ import lombok.extern.slf4j.Slf4j;
 public class TicketServiceImpl implements TicketService {
 	@Autowired
 	TicketRepository ticketRepository;
-	
+
 	@Autowired
 	PassengerRepository passengerRepository;
-	
+
 	@Autowired
 	FlightScheduleRepository flightScheduleRepository;
 
-	
 	/**
 	 * This method is used to reserveTicket for one journey flight ticket
 	 * 
 	 * @author Chethana M
-	 * @param ticketRequestDto - Takes parameters which are required to reserve ticket
+	 * @param ticketRequestDto - Takes parameters which are required to reserve
+	 *                         ticket
 	 * @throws FlightNotFoundException - Thrown when flight is not found
-	 * @throws NamingException - Thrown when Payment Exception occurs
+	 * @throws NamingException         - Thrown when Payment Exception occurs
 	 * @return TicketResponsedto - Returns Booking details
 	 * 
 	 */
-	public TicketResponsedto reserveTicket(TicketRequestDto ticketRequestDto) throws FlightNotFoundException, NamingException{
+	public TicketResponsedto reserveTicket(TicketRequestDto ticketRequestDto)
+			throws FlightNotFoundException, NamingException {
 		log.info("Entering into reserveTicket of TicketServiceImpl");
-		
-		Optional<FlightSchedule> flightSchedule= flightScheduleRepository.findById(ticketRequestDto.getFlightScheduleId());
-		if(!flightSchedule.isPresent()) {
-			log.error("Exception Occured in reserveTicket of TicketServiceImpl:"+Constant.FLIGHT_NOT_FOUND);
+
+		Optional<FlightSchedule> flightSchedule = flightScheduleRepository
+				.findById(ticketRequestDto.getFlightScheduleId());
+		if (!flightSchedule.isPresent()) {
+			log.error("Exception Occured in reserveTicket of TicketServiceImpl:" + Constant.FLIGHT_NOT_FOUND);
 			throw new FlightNotFoundException(Constant.FLIGHT_NOT_FOUND);
 		}
-		if(flightSchedule.get().getAvailableSeats()<ticketRequestDto.getNoOfPassengers()) {
-			log.error("Exception Occured in reserveTicket of TicketServiceImpl:"+Constant.INSUFFICIENT_TICKETS);
+		if (flightSchedule.get().getAvailableSeats() < ticketRequestDto.getNoOfPassengers()) {
+			log.error("Exception Occured in reserveTicket of TicketServiceImpl:" + Constant.INSUFFICIENT_TICKETS);
 			throw new FlightNotFoundException(Constant.INSUFFICIENT_TICKETS);
 		}
-		Ticket ticket= new Ticket();
-		flightSchedule.get().setAvailableSeats(flightSchedule.get().getAvailableSeats()-ticketRequestDto.getNoOfPassengers());
+		Ticket ticket = new Ticket();
+		flightSchedule.get()
+				.setAvailableSeats(flightSchedule.get().getAvailableSeats() - ticketRequestDto.getNoOfPassengers());
 		BeanUtils.copyProperties(ticketRequestDto, ticket);
 		ticket.setStatus(Constant.STATUS_BOOKED);
 		ticket.setTotalFare(ticketRequestDto.getTotalFare());
 		ticket.setFlightScheduleId(flightSchedule.get());
 		ticket.setPaymentType(ticketRequestDto.getPaymentType());
 		ticket.setBookingDate(LocalDate.now());
-		ticket=ticketRepository.save(ticket);
+		ticket = ticketRepository.save(ticket);
 		PaymentService paymentService = ServiceLocator.getService(ticketRequestDto.getPaymentType().toString());
 		String message=paymentService.execute();
 		final Ticket ticketDetails=ticket;
+		paymentService.execute();
 
-		
-		List<PassengerDto> passengerList=ticketRequestDto.getPassagerList();
-		passengerList.forEach(passengerIndex->{
-			Passenger passenger= new Passenger();
+		List<PassengerDto> passengerList = ticketRequestDto.getPassagerList();
+		passengerList.forEach(passengerIndex -> {
+			Passenger passenger = new Passenger();
 			BeanUtils.copyProperties(passengerIndex, passenger);
 			passenger.setTicketId(ticketDetails);
 			passengerRepository.save(passenger);
-		}
-		);
-	
+		});
+
 		log.debug("Entering into reserveTicket of TicketServiceImpl:Ticket booked successfully");
-		TicketResponsedto ticketResponsedto= new TicketResponsedto();
+		TicketResponsedto ticketResponsedto = new TicketResponsedto();
 		BeanUtils.copyProperties(ticket, ticketResponsedto);
 		ticketResponsedto.setBookingDate(ticket.getBookingDate());
 		ticketResponsedto.setMessage(message);
 		return  ticketResponsedto;
 	}
-	
+
 	/**
 	 * @author PriyaDharshini S.
 	 * @since 2020-02-03. This method will get particular ticket details by passing
@@ -121,18 +123,19 @@ public class TicketServiceImpl implements TicketService {
 			throws TicketNotFoundException, PassengerNotFoundException {
 		Optional<Ticket> ticket = ticketRepository.findById(ticketId);
 		if (!ticket.isPresent()) {
-			log.error("Entering into TicketServiceImpl:"+Constant.TICKET_NOT_FOUND);
+			log.error("Entering into TicketServiceImpl:" + Constant.TICKET_NOT_FOUND);
 			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
 		} else {
 			List<Passenger> passengers = passengerRepository.findAllByTicketId(ticket.get());
 			if (passengers.isEmpty()) {
-				log.error("Entering into TicketServiceImpl:"+Constant.PASSENGER_NOT_FOUND);
+				log.error("Entering into TicketServiceImpl:" + Constant.PASSENGER_NOT_FOUND);
 				throw new PassengerNotFoundException(Constant.PASSENGER_NOT_FOUND);
 			} else {
 				log.info("Entering into TicketServiceImpl:getting ticket details");
 				TicketDetailsResponseDto ticketDetailsResponseDto = new TicketDetailsResponseDto();
 				BeanUtils.copyProperties(ticket.get(), ticketDetailsResponseDto);
-				ticketDetailsResponseDto.setFlightName(ticket.get().getFlightScheduleId().getFlightId().getFlightName());
+				ticketDetailsResponseDto
+						.setFlightName(ticket.get().getFlightScheduleId().getFlightId().getFlightName());
 				ticketDetailsResponseDto.setArrivalTime(ticket.get().getFlightScheduleId().getArrivalTime());
 				ticketDetailsResponseDto.setDepartureTime(ticket.get().getFlightScheduleId().getDepartureTime());
 				ticketDetailsResponseDto
@@ -154,7 +157,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void cancleBooking(Long ticketId)
+	public void cancelTicket(Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
 		Optional<Ticket> ticketDetail = ticketRepository.findById(ticketId);
 		if (!ticketDetail.isPresent()) {
@@ -183,7 +186,7 @@ public class TicketServiceImpl implements TicketService {
 		updateFlightSchedule.setAvailableSeats(availableSeatsUpdate);
 		flightScheduleRepository.save(updateFlightSchedule);
 
-		//Update ticket booking status as "Canceled"
+		// Update ticket booking status as "Canceled"
 		Ticket statusUpdate = ticketDetail.get();
 		statusUpdate.setStatus(Constant.TICKET_BOOKING_CANCELLED);
 		ticketRepository.save(statusUpdate);
