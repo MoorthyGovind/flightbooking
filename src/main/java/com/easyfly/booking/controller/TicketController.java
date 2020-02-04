@@ -77,6 +77,7 @@ public class TicketController {
 	public ResponseEntity<TicketDetailsResponseDto> getTicketDetails(@PathVariable Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException {
 		if (ticketId == null) {
+			logger.info("Entering into TicketController: TicketId not entered");
 			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
 		} else {
 			logger.info("Entering into TicketController: getting ticket details");
@@ -84,12 +85,30 @@ public class TicketController {
 		}
 	}
 
+	/**
+	 * Cancel the ticket the based on the ticketId
+	 * 
+	 * @param ticketId - Id of the ticket.
+	 * @return details with status code and message as a responseDto.
+	 * @throws TicketNotFoundException          - Throws the TicketNotFoundException
+	 *                                          when ticket details not found.
+	 * @throws PassengerNotFoundException       - Throws the
+	 *                                          PassengerNotFoundException when
+	 *                                          passenger not found
+	 * @throws CancelTicketBeforeRangeException - Throws the
+	 *                                          CancelTicketBeforeRangeException
+	 *                                          when the range as before of the
+	 *                                          current date while canceling the
+	 *                                          ticket.
+	 */
 	@DeleteMapping("/{ticketId}")
 	public ResponseEntity<ResponseDto> cancelTicket(@PathVariable Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
 		if (ticketId == null) {
+			logger.info("Entering into TicketController: TicketId not entered");
 			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
 		} else {
+			logger.info("Entering into TicketController: cancelling the ticket");
 			ResponseDto responseDto = new ResponseDto();
 			ticketService.cancelTicket(ticketId);
 			responseDto.setStatusCode(HttpStatus.OK.value());
@@ -97,7 +116,5 @@ public class TicketController {
 			return new ResponseEntity<>(responseDto, HttpStatus.OK);
 		}
 	}
-	
-	
 
 }

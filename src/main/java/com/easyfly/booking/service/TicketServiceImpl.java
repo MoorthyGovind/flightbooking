@@ -32,9 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is used to perform the flight ticket related operation like
- * booking,cancellation
+ * booking, ticket cancellation
  * 
  * @author Chethana
+ * @since 04-02-2020
+ * @version V1.1
  *
  */
 @Service
@@ -94,6 +96,7 @@ public class TicketServiceImpl implements TicketService {
 			Passenger passenger = new Passenger();
 			BeanUtils.copyProperties(passengerIndex, passenger);
 			passenger.setTicketId(ticketDetails);
+			passenger.setAadharNumber(passengerIndex.getAadharNumber());
 			passengerRepository.save(passenger);
 		});
 
@@ -155,6 +158,22 @@ public class TicketServiceImpl implements TicketService {
 		}
 	}
 
+	/**
+	 * Cancel the ticket the based on the ticketId
+	 * 
+	 * @param ticketId - Id of the ticket.
+	 * @return details with status code and message as a responseDto.
+	 * @throws TicketNotFoundException          - Throws the TicketNotFoundException
+	 *                                          when ticket details not found.
+	 * @throws PassengerNotFoundException       - Throws the
+	 *                                          PassengerNotFoundException when
+	 *                                          passenger not found
+	 * @throws CancelTicketBeforeRangeException - Throws the
+	 *                                          CancelTicketBeforeRangeException
+	 *                                          when the range as before of the
+	 *                                          current date while canceling the
+	 *                                          ticket.
+	 */
 	@Override
 	public void cancelTicket(Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {

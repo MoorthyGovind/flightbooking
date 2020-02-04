@@ -60,7 +60,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		errorDto.setErrorStatusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
 	}
-	
+
 	@ExceptionHandler(DateTimeParseException.class)
 	public ResponseEntity<ErrorDto> dateTimeParseException(DateTimeParseException ex) {
 		ErrorDto errorDto = new ErrorDto();
@@ -70,34 +70,42 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(FlightNotFoundException.class)
-	public ResponseEntity<ErrorDto> flightNotFoundException(){
-		ErrorDto errorDto= new ErrorDto();
+	public ResponseEntity<ErrorDto> flightNotFoundException() {
+		ErrorDto errorDto = new ErrorDto();
 		errorDto.setErrorStatusMessage(Constant.FAILURE_MESSAGE);
 		errorDto.setErrorStatusCode(HttpStatus.NOT_FOUND.value());
 		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
 	}
-	
+
 	@ExceptionHandler(PassengerNotFoundException.class)
-	public ResponseEntity<ErrorDto> passengerNotFoundException(){
-		ErrorDto errorDto= new ErrorDto();
+	public ResponseEntity<ErrorDto> passengerNotFoundException() {
+		ErrorDto errorDto = new ErrorDto();
 		errorDto.setErrorStatusMessage(Constant.PASSENGER_NOT_FOUND);
 		errorDto.setErrorStatusCode(HttpStatus.NOT_FOUND.value());
 		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
 	}
-	
+
 	@ExceptionHandler(LocationNotFoundException.class)
-	public ResponseEntity<ErrorDto> locationNotFoundException(){
-		ErrorDto errorDto= new ErrorDto();
+	public ResponseEntity<ErrorDto> locationNotFoundException() {
+		ErrorDto errorDto = new ErrorDto();
 		errorDto.setErrorStatusMessage(Constant.LOCATION_NOT_FOUND);
 		errorDto.setErrorStatusCode(HttpStatus.NOT_FOUND.value());
 		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
 	}
-	
+
 	@ExceptionHandler(TicketNotFoundException.class)
-	public ResponseEntity<ErrorDto> ticketNotFoundException(){
-		ErrorDto errorDto= new ErrorDto();
+	public ResponseEntity<ErrorDto> ticketNotFoundException() {
+		ErrorDto errorDto = new ErrorDto();
 		errorDto.setErrorStatusMessage(Constant.TICKET_NOT_FOUND);
 		errorDto.setErrorStatusCode(HttpStatus.NOT_FOUND.value());
+		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
+	}
+
+	@ExceptionHandler(CancelTicketBeforeRangeException.class)
+	public ResponseEntity<ErrorDto> cancelTicketBeforeRangeException(CancelTicketBeforeRangeException ex) {
+		ErrorDto errorDto = new ErrorDto();
+		errorDto.setErrorStatusMessage(ex.getMessage());
+		errorDto.setErrorStatusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 		return ResponseEntity.status(HttpStatus.OK).body(errorDto);
 	}
 }
