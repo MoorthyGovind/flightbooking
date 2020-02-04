@@ -14,4 +14,6 @@ public interface FlightScheduleRepository extends JpaRepository<FlightSchedule, 
 
 	Optional<FlightSchedule> findByFlightIdAndTravelTypeIdAndFlightScheduledDateAndAvailableSeatsGreaterThanEqual(Flight flight,
 			Integer travelTypeId, LocalDate scheduleDate, Integer noOfPassengers);
+	
+	FlightSchedule findByFlightScheduleId(Integer flightScheduleId);
 }
