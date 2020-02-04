@@ -44,9 +44,12 @@ public class FlightController {
 	 * @param searchDto - finding a available flights based on the source,
 	 *                  destination, date and travel type params.
 	 * @return list of the flight details along with status code and message.
-	 * @throws InvalidLocationException
-	 * @throws SameLocationException 
-	 * @throws  
+	 * @throws InvalidLocationException - throws the InvalidLocationException while
+	 *                                  giving the invalid data the source and
+	 *                                  destination locations.
+	 * @throws SameLocationException    - throws the SameLocationException while
+	 *                                  giving same date the source and destination
+	 *                                  locations.
 	 */
 	@PostMapping
 	public ResponseEntity<SearchResponseDto> getAvailableFlights(@Valid @RequestBody SearchDto searchDto)
