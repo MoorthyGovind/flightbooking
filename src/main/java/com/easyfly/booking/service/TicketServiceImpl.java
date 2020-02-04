@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is used to perform the flight ticket related operation like
- * booking, ticket cancellation
+ * booking, ticket cancellation,track ticket details
  * 
  * @author Chethana
  * @since 04-02-2020
@@ -188,22 +188,20 @@ public class TicketServiceImpl implements TicketService {
 			throw new PassengerNotFoundException(Constant.PASSENGER_NOT_FOUND);
 		}
 
-		Optional<FlightSchedule> flightSchedule = flightScheduleRepository
-				.findById(ticketDetail.get().getFlightScheduleId().getFlightScheduleId());
-		FlightSchedule updateFlightSchedule = flightSchedule.get();
+		FlightSchedule flightSchedule = flightScheduleRepository
+				.findByFlightScheduleId(ticketDetail.get().getFlightScheduleId().getFlightScheduleId());
 
 		// Check cancel for before one day validation.
 		LocalDate currentDate = LocalDate.now();
-
-		Boolean isBefore = currentDate.isBefore(flightSchedule.get().getFlightScheduledDate());
+		Boolean isBefore = currentDate.isBefore(flightSchedule.getFlightScheduledDate());
 		if (!isBefore) {
 			throw new CancelTicketBeforeRangeException(Constant.TICKET_CANCELLED_BEFORE_RANGE);
 		}
 
-		Integer availableSeatsUpdate = flightSchedule.get().getAvailableSeats() + passengers.size();
+		Integer availableSeatsUpdate = flightSchedule.getAvailableSeats() + passengers.size();
 
-		updateFlightSchedule.setAvailableSeats(availableSeatsUpdate);
-		flightScheduleRepository.save(updateFlightSchedule);
+		flightSchedule.setAvailableSeats(availableSeatsUpdate);
+		flightScheduleRepository.save(flightSchedule);
 
 		// Update ticket booking status as "Canceled"
 		Ticket statusUpdate = ticketDetail.get();
