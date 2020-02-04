@@ -20,7 +20,10 @@
 		<sonar.coverage.exclusions>
 			**/dto/*,
 			**/entity/*,
-			**/config/*
+			**/config/*,
+			**/constant/*,
+			**/FlightbookingApplication.java*,
+			**/GlobalExceptionHandler.java*
 		</sonar.coverage.exclusions>
 	</properties>
 

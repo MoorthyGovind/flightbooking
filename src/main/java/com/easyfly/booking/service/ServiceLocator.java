@@ -4,7 +4,14 @@ package com.easyfly.booking.service;
 import javax.naming.NamingException;
 
 public class ServiceLocator {
+	
+     private ServiceLocator() {
+		
+	}
+     
 	private static Cache cache; 
+	
+	
 	  
     static
     { 
@@ -20,8 +27,8 @@ public class ServiceLocator {
         } 
   
         InitialContext context = new InitialContext(); 
-        PaymentService ServiceOne = (PaymentService)context.lookup(name); 
-        cache.addService(ServiceOne); 
-        return ServiceOne; 
+        PaymentService serviceOne = (PaymentService)context.lookup(name); 
+        cache.addService(serviceOne); 
+        return serviceOne; 
     } 
 }

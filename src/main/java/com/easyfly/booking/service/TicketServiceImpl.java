@@ -88,8 +88,8 @@ public class TicketServiceImpl implements TicketService {
 		ticket.setBookingDate(LocalDate.now());
 		ticket = ticketRepository.save(ticket);
 		PaymentService paymentService = ServiceLocator.getService(ticketRequestDto.getPaymentType().toString());
-		String message=paymentService.execute();
-		final Ticket ticketDetails=ticket;
+		String message = paymentService.execute();
+		final Ticket ticketDetails = ticket;
 		paymentService.execute();
 
 		List<PassengerDto> passengerList = ticketRequestDto.getPassagerList();
@@ -106,7 +106,7 @@ public class TicketServiceImpl implements TicketService {
 		BeanUtils.copyProperties(ticket, ticketResponsedto);
 		ticketResponsedto.setBookingDate(ticket.getBookingDate());
 		ticketResponsedto.setMessage(message);
-		return  ticketResponsedto;
+		return ticketResponsedto;
 	}
 
 	/**
