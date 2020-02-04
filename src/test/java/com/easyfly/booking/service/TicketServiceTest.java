@@ -116,7 +116,7 @@ public class TicketServiceTest {
 		Mockito.when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
 		Mockito.when(passengerRepository.findAllByTicketId(ticket)).thenReturn(passengers);
 		Mockito.when(flightScheduleRepository.findById(1)).thenReturn(Optional.of(flightSchedule));
-		ticketServiceImpl.cancleBooking(1L);
+		ticketServiceImpl.cancelTicket(1L);
 		assertEquals("moorthy127@gmail.com", ticket.getEmailId());
 	}
 	
@@ -124,7 +124,7 @@ public class TicketServiceTest {
 	public void testCancleBookingForTicketNotFoundException()
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
 		Mockito.when(ticketRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
-		ticketServiceImpl.cancleBooking(1L);
+		ticketServiceImpl.cancelTicket(1L);
 	}
 	
 	@Test(expected = PassengerNotFoundException.class)
@@ -133,7 +133,7 @@ public class TicketServiceTest {
 		List<Passenger> passengers =  new ArrayList<>();
 		Mockito.when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
 		Mockito.when(passengerRepository.findAllByTicketId(ticket)).thenReturn(passengers);
-		ticketServiceImpl.cancleBooking(1L);
+		ticketServiceImpl.cancelTicket(1L);
 	}
 	
 	@Test(expected = CancelTicketBeforeRangeException.class)
@@ -143,7 +143,7 @@ public class TicketServiceTest {
 		Mockito.when(ticketRepository.findById(1L)).thenReturn(Optional.of(ticket));
 		Mockito.when(passengerRepository.findAllByTicketId(ticket)).thenReturn(passengers);
 		Mockito.when(flightScheduleRepository.findById(1)).thenReturn(Optional.of(flightSchedule));
-		ticketServiceImpl.cancleBooking(1L);
+		ticketServiceImpl.cancelTicket(1L);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.easyfly.booking.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
@@ -55,12 +54,29 @@ public class TicketControllerTest {
 
 	}
 
+	@Test(expected = TicketNotFoundException.class)
+	public void testGetTicketDetailsForTicketNotFoundException()
+			throws TicketNotFoundException, PassengerNotFoundException {
+
+		ticket.setTicketId(null);
+		ticketController.getTicketDetails(null);
+
+	}
+
 	@Test
-	public void testCancelBooking()
+	public void testCancelTicket()
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
-		ticketService.cancleBooking(1L);
-		ResponseEntity<ResponseDto> response = ticketController.cancelBooking(1L);
+		ticket.setTicketId(1L);
+		ticketService.cancelTicket(1L);
+		ResponseEntity<ResponseDto> response = ticketController.cancelTicket(1L);
 		assertEquals(Constant.TICKET_CANCELLED_SUCCESSFULLY, response.getBody().getMessage());
+	}
+
+	@Test(expected = TicketNotFoundException.class)
+	public void testCancelTicketFor()
+			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
+		ticket.setTicketId(null);
+		ticketController.cancelTicket(null);
 	}
 
 }
