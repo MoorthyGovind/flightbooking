@@ -32,9 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is used to perform the flight ticket related operation like
- * booking,cancellation,track ticket details
+ * booking, ticket cancellation,track ticket details
  * 
  * @author Chethana
+ * @since 04-02-2020
+ * @version V1.1
  *
  */
 @Service
@@ -95,6 +97,7 @@ public class TicketServiceImpl implements TicketService {
 			Passenger passenger = new Passenger();
 			BeanUtils.copyProperties(passengerIndex, passenger);
 			passenger.setTicketId(ticketDetails);
+			passenger.setAadharNumber(passengerIndex.getAadharNumber());
 			passengerRepository.save(passenger);
 		});
 
@@ -156,6 +159,22 @@ public class TicketServiceImpl implements TicketService {
 		}
 	}
 
+	/**
+	 * Cancel the ticket the based on the ticketId
+	 * 
+	 * @param ticketId - Id of the ticket.
+	 * @return details with status code and message as a responseDto.
+	 * @throws TicketNotFoundException          - Throws the TicketNotFoundException
+	 *                                          when ticket details not found.
+	 * @throws PassengerNotFoundException       - Throws the
+	 *                                          PassengerNotFoundException when
+	 *                                          passenger not found
+	 * @throws CancelTicketBeforeRangeException - Throws the
+	 *                                          CancelTicketBeforeRangeException
+	 *                                          when the range as before of the
+	 *                                          current date while canceling the
+	 *                                          ticket.
+	 */
 	@Override
 	public void cancelTicket(Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
@@ -169,22 +188,20 @@ public class TicketServiceImpl implements TicketService {
 			throw new PassengerNotFoundException(Constant.PASSENGER_NOT_FOUND);
 		}
 
-		Optional<FlightSchedule> flightSchedule = flightScheduleRepository
-				.findById(ticketDetail.get().getFlightScheduleId().getFlightScheduleId());
-		FlightSchedule updateFlightSchedule = flightSchedule.get();
+		FlightSchedule flightSchedule = flightScheduleRepository
+				.findByFlightScheduleId(ticketDetail.get().getFlightScheduleId().getFlightScheduleId());
 
 		// Check cancel for before one day validation.
 		LocalDate currentDate = LocalDate.now();
-
-		Boolean isBefore = currentDate.isBefore(flightSchedule.get().getFlightScheduledDate());
+		Boolean isBefore = currentDate.isBefore(flightSchedule.getFlightScheduledDate());
 		if (!isBefore) {
 			throw new CancelTicketBeforeRangeException(Constant.TICKET_CANCELLED_BEFORE_RANGE);
 		}
 
-		Integer availableSeatsUpdate = flightSchedule.get().getAvailableSeats() + passengers.size();
+		Integer availableSeatsUpdate = flightSchedule.getAvailableSeats() + passengers.size();
 
-		updateFlightSchedule.setAvailableSeats(availableSeatsUpdate);
-		flightScheduleRepository.save(updateFlightSchedule);
+		flightSchedule.setAvailableSeats(availableSeatsUpdate);
+		flightScheduleRepository.save(flightSchedule);
 
 		// Update ticket booking status as "Canceled"
 		Ticket statusUpdate = ticketDetail.get();
