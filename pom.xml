@@ -23,6 +23,9 @@
 			**/config/*,
 			**/constant/*,
 			**/FlightbookingApplication.java*,
+			**/Cache.java*, **/InitialContext.java*,
+			**/ServiceLocator.java*, **/PaymentService.java*,
+			**/Paytm.java*,**/Phonepe.java*
 			**/GlobalExceptionHandler.java*
 		</sonar.coverage.exclusions>
 	</properties>
