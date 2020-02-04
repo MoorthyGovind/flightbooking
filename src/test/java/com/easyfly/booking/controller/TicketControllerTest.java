@@ -1,9 +1,10 @@
 package com.easyfly.booking.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+
+import javax.naming.NamingException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +19,12 @@ import org.springframework.http.ResponseEntity;
 import com.easyfly.booking.constant.Constant;
 import com.easyfly.booking.dto.ResponseDto;
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
+import com.easyfly.booking.dto.TicketRequestDto;
+import com.easyfly.booking.dto.TicketResponsedto;
 import com.easyfly.booking.entity.Passenger;
 import com.easyfly.booking.entity.Ticket;
 import com.easyfly.booking.exception.CancelTicketBeforeRangeException;
+import com.easyfly.booking.exception.FlightNotFoundException;
 import com.easyfly.booking.exception.PassengerNotFoundException;
 import com.easyfly.booking.exception.TicketNotFoundException;
 import com.easyfly.booking.service.TicketService;
@@ -37,6 +41,8 @@ public class TicketControllerTest {
 	Ticket ticket = new Ticket();
 	TicketDetailsResponseDto ticketDetailsResponseDto = new TicketDetailsResponseDto();
 	Passenger Passenger = new Passenger();
+	TicketRequestDto ticketRequestDto= new TicketRequestDto();
+	TicketResponsedto ticketResponsedto= new TicketResponsedto();
 
 	@Before
 	public void setUp() {
@@ -61,6 +67,13 @@ public class TicketControllerTest {
 		ticketService.cancleBooking(1L);
 		ResponseEntity<ResponseDto> response = ticketController.cancelBooking(1L);
 		assertEquals(Constant.TICKET_CANCELLED_SUCCESSFULLY, response.getBody().getMessage());
+	}
+	
+	@Test
+	public void testReserveTicket() throws FlightNotFoundException, NamingException{
+		Mockito.when(ticketService.reserveTicket(ticketRequestDto)).thenReturn(ticketResponsedto);
+		ResponseEntity<TicketResponsedto> response=ticketController.reserveTicket(ticketRequestDto);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 
 }
