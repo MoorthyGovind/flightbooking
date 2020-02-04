@@ -26,7 +26,7 @@ public interface TicketService {
 	 */
 	TicketDetailsResponseDto getTicketDetails(Long ticketId) throws TicketNotFoundException, PassengerNotFoundException;
 
-	public void cancleBooking(Long ticketId)
+	public void cancelTicket(Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException;
 	public TicketResponsedto reserveTicket(TicketRequestDto ticketRequestDto) throws FlightNotFoundException, NamingException;
 }
