@@ -3,7 +3,6 @@ package com.easyfly.booking.dto;
 import java.util.List;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,7 +22,7 @@ public class TicketRequestDto{
     @NotEmpty @Email(message = "Invalid Email")
 	private String emailId;
     
-    @NotNull @Min(6) @Max(10)
+
 	private Long phoneNumber;
     
     @Min(value = 1, message = "noOfPassengers can't be less than 1")

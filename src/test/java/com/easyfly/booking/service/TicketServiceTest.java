@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.naming.NamingException;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import com.easyfly.booking.common.BookingEnum;
 import com.easyfly.booking.dto.PassengerDto;
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
 import com.easyfly.booking.dto.TicketRequestDto;
+import com.easyfly.booking.dto.TicketResponsedto;
 import com.easyfly.booking.entity.Flight;
 import com.easyfly.booking.entity.FlightSchedule;
 import com.easyfly.booking.entity.Location;
@@ -33,6 +35,7 @@ import com.easyfly.booking.exception.TicketNotFoundException;
 import com.easyfly.booking.repository.FlightScheduleRepository;
 import com.easyfly.booking.repository.PassengerRepository;
 import com.easyfly.booking.repository.TicketRepository;
+
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class TicketServiceTest {
@@ -97,6 +100,9 @@ public class TicketServiceTest {
 		ticketRequestDto.setTotalFare(1500);
 		ticketRequestDto.setFlightScheduleId(1);
 		ticketRequestDto.setPaymentType(BookingEnum.PaymentType.PAYTM);
+		
+		
+		ticketRequestDto.setPassagerList(passengerDtos);
 	}
 
 	@Test
@@ -168,6 +174,18 @@ public class TicketServiceTest {
 	public void testReserveInsufficientSeats() throws FlightNotFoundException, NamingException{
 		Mockito.when(flightScheduleRepository.findById(1)).thenReturn(Optional.of(flightSchedule));
 		ticketServiceImpl.reserveTicket(ticketRequestDto);
+	}
+	
+	@Test
+	public void testReserveSeats() throws FlightNotFoundException, NamingException{
+		Ticket ticketDetail = new Ticket();
+		ticketDetail.setTicketId(1L);
+		ticketDetail.setTotalFare(1500.00);
+		Mockito.when(flightScheduleRepository.findById(1)).thenReturn(Optional.of(flightSchedule));
+		ticketRequestDto.setNoOfPassengers(6);
+		Mockito.when(ticketRepository.save(ticket)).thenReturn(ticketDetail);
+		TicketResponsedto ticketResponsedto= ticketServiceImpl.reserveTicket(ticketRequestDto);
+		Assert.assertNotNull(ticketResponsedto);
 	}
 	
 }
