@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.naming.NamingException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +17,17 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import com.easyfly.booking.common.BookingEnum;
 import com.easyfly.booking.dto.PassengerDto;
 import com.easyfly.booking.dto.TicketDetailsResponseDto;
+import com.easyfly.booking.dto.TicketRequestDto;
 import com.easyfly.booking.entity.Flight;
 import com.easyfly.booking.entity.FlightSchedule;
 import com.easyfly.booking.entity.Location;
 import com.easyfly.booking.entity.Passenger;
 import com.easyfly.booking.entity.Ticket;
 import com.easyfly.booking.exception.CancelTicketBeforeRangeException;
+import com.easyfly.booking.exception.FlightNotFoundException;
 import com.easyfly.booking.exception.PassengerNotFoundException;
 import com.easyfly.booking.exception.TicketNotFoundException;
 import com.easyfly.booking.repository.FlightScheduleRepository;
@@ -53,6 +58,7 @@ public class TicketServiceTest {
 	List<PassengerDto> passengerDtos = new ArrayList<>();
 	Flight flight = new Flight();
 	FlightSchedule flightSchedule = new FlightSchedule();
+	TicketRequestDto ticketRequestDto= new TicketRequestDto();
 
 	@Before
 	public void setUp() {
@@ -85,6 +91,12 @@ public class TicketServiceTest {
 		ticketDetailsResponseDto.setPassengers(passengerDtos);
 		ticketDetailsResponseDto.setPhoneNumber(ticket.getPhoneNumber());
 		ticketDetailsResponseDto.setSource(ticket.getStatus());
+		
+		ticketRequestDto.setFlightScheduleId(1);
+		ticketRequestDto.setNoOfPassengers(12);
+		ticketRequestDto.setTotalFare(1500);
+		ticketRequestDto.setFlightScheduleId(1);
+		ticketRequestDto.setPaymentType(BookingEnum.PaymentType.PAYTM);
 	}
 
 	@Test
@@ -146,4 +158,16 @@ public class TicketServiceTest {
 		ticketServiceImpl.cancelTicket(1L);
 	}
 
+	@Test(expected = FlightNotFoundException.class)
+	public void testReserveTicketFlightNotFoundException() throws FlightNotFoundException, NamingException{
+		Mockito.when(flightScheduleRepository.findById(2)).thenReturn(Optional.of(flightSchedule));
+		ticketServiceImpl.reserveTicket(ticketRequestDto);
+	}
+	
+	@Test(expected = FlightNotFoundException.class)
+	public void testReserveInsufficientSeats() throws FlightNotFoundException, NamingException{
+		Mockito.when(flightScheduleRepository.findById(1)).thenReturn(Optional.of(flightSchedule));
+		ticketServiceImpl.reserveTicket(ticketRequestDto);
+	}
+	
 }

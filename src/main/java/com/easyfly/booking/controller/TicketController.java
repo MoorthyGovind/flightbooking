@@ -56,7 +56,6 @@ public class TicketController {
 			throws FlightNotFoundException, NamingException {
 		log.info("Entering into reserveTicket of TicketController");
 		TicketResponsedto ticketResponsedto = ticketService.reserveTicket(ticketRequestDto);
-		ticketResponsedto.setMessage(Constant.SUCCESS_MESSAGE);
 		ticketResponsedto.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<>(ticketResponsedto, HttpStatus.OK);
 	}

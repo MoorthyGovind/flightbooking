@@ -28,4 +28,7 @@ public class Constant {
 	public static final String SUCCESS_MESSAGE = "Success";
 	public static final String STATUS_BOOKED = "BOOKED";
 	public static final String INSUFFICIENT_TICKETS = "Insufficient tickets available";
+	
+	public static final String PHONEPE_MSG = "Booking successful..Payment succedded using Phonepe";
+	public static final String PAYTM_MSG = "Booking successful..Payment succedded using PayTm";
 }
