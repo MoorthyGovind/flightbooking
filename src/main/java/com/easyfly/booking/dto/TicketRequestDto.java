@@ -23,7 +23,7 @@ public class TicketRequestDto{
     @NotEmpty @Email(message = "Invalid Email")
 	private String emailId;
     
-    @NotNull @Min(6) @Max(10)
+
 	private Long phoneNumber;
     
     @Min(value = 1, message = "noOfPassengers can't be less than 1")

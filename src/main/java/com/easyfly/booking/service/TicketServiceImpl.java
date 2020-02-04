@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.naming.NamingException;
 import javax.transaction.Transactional;
@@ -86,27 +87,28 @@ public class TicketServiceImpl implements TicketService {
 		ticket.setFlightScheduleId(flightSchedule.get());
 		ticket.setPaymentType(ticketRequestDto.getPaymentType());
 		ticket.setBookingDate(LocalDate.now());
-		ticket = ticketRepository.save(ticket);
+		ticketRepository.save(ticket);
 		PaymentService paymentService = ServiceLocator.getService(ticketRequestDto.getPaymentType().toString());
 		String message = paymentService.execute();
 		final Ticket ticketDetails = ticket;
-		paymentService.execute();
 
-		List<PassengerDto> passengerList = ticketRequestDto.getPassagerList();
-		passengerList.forEach(passengerIndex -> {
-			Passenger passenger = new Passenger();
-			BeanUtils.copyProperties(passengerIndex, passenger);
-			passenger.setTicketId(ticketDetails);
-			passenger.setAadharNumber(passengerIndex.getAadharNumber());
-			passengerRepository.save(passenger);
-		});
-
+		List<PassengerDto> passengerDtoList = ticketRequestDto.getPassagerList();		
+		List<Passenger> passengerList=passengerDtoList.stream().map(x -> convertPassenger(x,ticketDetails)).collect(Collectors.toList());	
+		passengerRepository.saveAll(passengerList);
+		
 		log.debug("Entering into reserveTicket of TicketServiceImpl:Ticket booked successfully");
 		TicketResponsedto ticketResponsedto = new TicketResponsedto();
 		BeanUtils.copyProperties(ticket, ticketResponsedto);
 		ticketResponsedto.setBookingDate(ticket.getBookingDate());
 		ticketResponsedto.setMessage(message);
 		return ticketResponsedto;
+	}
+	
+	private Passenger convertPassenger(PassengerDto passengerDto,Ticket ticketDetails) {
+		Passenger passenger = new Passenger();
+		BeanUtils.copyProperties(passengerDto, passenger);
+		passenger.setTicketId(ticketDetails);
+		return passenger;
 	}
 
 	/**
