@@ -1,4 +1,5 @@
 package com.easyfly.booking.controller;
+
 import javax.naming.NamingException;
 import javax.validation.Valid;
 
@@ -60,7 +61,6 @@ public class TicketController {
 		return new ResponseEntity<>(ticketResponsedto, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * @author PriyaDharshini S.
 	 * @since 2020-02-03. This method will get particular ticket details by passing
@@ -74,20 +74,30 @@ public class TicketController {
 	 * 
 	 */
 	@GetMapping("/{ticketId}")
-	public ResponseEntity<TicketDetailsResponseDto> getTicketDetails(@Valid@PathVariable Long ticketId)
+	public ResponseEntity<TicketDetailsResponseDto> getTicketDetails(@PathVariable Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException {
-		logger.info("Entering into TicketController: getting ticket details");
-		return new ResponseEntity<>(ticketService.getTicketDetails(ticketId), HttpStatus.OK);
+		if (ticketId == null) {
+			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
+		} else {
+			logger.info("Entering into TicketController: getting ticket details");
+			return new ResponseEntity<>(ticketService.getTicketDetails(ticketId), HttpStatus.OK);
+		}
 	}
 
 	@DeleteMapping("/{ticketId}")
-	public ResponseEntity<ResponseDto> cancelBooking(@PathVariable Long ticketId)
+	public ResponseEntity<ResponseDto> cancelTicket(@PathVariable Long ticketId)
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
-		ResponseDto responseDto = new ResponseDto();
-		ticketService.cancleBooking(ticketId);
-		responseDto.setStatusCode(HttpStatus.OK.value());
-		responseDto.setMessage(Constant.TICKET_CANCELLED_SUCCESSFULLY);
-		return new ResponseEntity<>(responseDto, HttpStatus.OK);
+		if (ticketId == null) {
+			throw new TicketNotFoundException(Constant.TICKET_NOT_FOUND);
+		} else {
+			ResponseDto responseDto = new ResponseDto();
+			ticketService.cancelTicket(ticketId);
+			responseDto.setStatusCode(HttpStatus.OK.value());
+			responseDto.setMessage(Constant.TICKET_CANCELLED_SUCCESSFULLY);
+			return new ResponseEntity<>(responseDto, HttpStatus.OK);
+		}
 	}
+	
+	
 
 }
