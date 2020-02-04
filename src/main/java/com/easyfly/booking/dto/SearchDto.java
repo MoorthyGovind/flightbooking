@@ -5,26 +5,36 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.easyfly.booking.constant.Constant;
+
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * SearchDto - Request details model for the search flight.
+ * 
+ * @author Goivndasamy.C
+ * @since 04-02-2020
+ * @version V1.1
+ *
+ */
 @Getter
 @Setter
 public class SearchDto {
 
-	@NotNull(message = "source should not be empty")
+	@NotNull(message = Constant.SOURCE_EMPTY)
 	private String source;
 
-	@NotNull(message = "destination should not be empty")
+	@NotNull(message = Constant.DESTINATION_EMPTY)
 	private String destination;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = Constant.DATE_TIME_FORMAT_PATTERN)
 	private String date;
 
-	@Min(value = 1, message = "noOfPassengers can't be less than 1")
+	@Min(value = 1, message = Constant.NO_OF_PASSENGERS_LESS_THAN_1)
 	private Integer noOfPassengers;
 
-	@NotNull(message = "travelType should not be empty")
+	@NotNull(message = Constant.TRAVEL_TYPE_EMPTY)
 	private String travelType;
 
 }

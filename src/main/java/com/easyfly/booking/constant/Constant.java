@@ -12,6 +12,14 @@ public class Constant {
 	public static final String INVALID_SOURCE_LOCATION = "Invalid Source Location";
 	public static final String INVALID_DESTINATION_LOCATION = "Invalid Destination Location";
 	public static final String SOURCE_DESTINATION_SHOULD_NOT_SAME = "Source and Destination should not be same.";
+	
+	//Validation
+	public static final String SOURCE_EMPTY = "source should not be empty";
+	public static final String DESTINATION_EMPTY = "destination should not be empty";
+	public static final String NO_OF_PASSENGERS_LESS_THAN_1 = "noOfPassengers can't be less than 1";
+	public static final String TRAVEL_TYPE_EMPTY = "travelType should not be empty";
+	public static final String DATE_TIME_FORMAT_PATTERN = "yyyy-MM-dd";
+
 
 	// Tickets
 	public static final String TICKET_BOOKING_CANCELLED = "Cancelled";
