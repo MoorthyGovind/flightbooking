@@ -87,7 +87,7 @@ public class TicketControllerTest {
 	}
 
 	@Test(expected = TicketNotFoundException.class)
-	public void testCancelTicketFor()
+	public void testCancelTicketForTicketNotFoundException()
 			throws TicketNotFoundException, PassengerNotFoundException, CancelTicketBeforeRangeException {
 		ticket.setTicketId(null);
 		ticketController.cancelTicket(null);
